@@ -1,0 +1,61 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <div id='main'></div>
+</body>
+
+</html>
+<script src="main.js"></script>
+<script>
+    var Result;
+    var Eqns = "";
+    var PassEquations;
+    Module.onRuntimeInitialized = function () {
+        PassEquations = Module.cwrap('PassEquations', 'int', ['string']);
+    }
+    var dv = document.createElement("div");
+    dv.style.cssText = "position: absolute;width:30%;height:50%; top:0 ; left:0; background-color: #e7e7e7";
+    document.querySelector('#main').appendChild(dv);
+    var input1 = document.createElement("input");
+    input1.style.cssText = "position: absolute;width:190;height:20px; top:15 ; left:25;";
+    input1.placeholder = "Input 1";
+    var input2 = document.createElement("input");
+    input2.style.cssText = "position: absolute;width:190;height:20px; top:45 ; left:25;";
+    input2.placeholder = "Input 2";
+    dv.appendChild(input1);
+    dv.appendChild(input2);
+    Go = document.createElement("Div");
+    Go.style.cssText = "cursor:pointer;border-radius: 2px;background-color: midnightblue;position: absolute;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;left:30%;top:75%;";
+    Go.innerText = "Go";
+    Go.style.textAlign = "center";
+    Go.addEventListener("click", function () {
+                Eqns = input1.value+";"+input2.value;
+                Evaluate();
+            });
+    dv.appendChild(Go);
+    var solution = document.createElement("div");
+    solution.style.cssText = "position: absolute;width:10%;height:50%; top:0 ; left:30%; background-color: midnightblue";
+    solution.id = "solution";
+    document.querySelector('#main').appendChild(solution);
+    var title = document.createElement("div");
+    title.style.cssText = "position: absolute; width:85%;height:25px; top:10 ; left:10; background-color: transparent;color:white";
+    title.innerText = "Solution";
+    solution.appendChild(title);
+    function Evaluate() {
+        var buffer = Module._malloc(Eqns.length + 1);
+        Module.writeStringToMemory(Eqns, buffer);
+        Module.ccall('PassEquations', 'null', ['number'], [buffer]);
+    }
+    function SolutionPanel(variables) {
+        console.log(variables);
+        var SolDv=document.getElementById("solution");
+        var VarSolution = document.createElement("div");
+        VarSolution.style.cssText = "position: absolute; width:85%;height:25px; top:25; left:10; background-color: transparent;color:white";
+        VarSolution.innerText = variables;
+        SolDv.appendChild(VarSolution);
+    }
+</script>
